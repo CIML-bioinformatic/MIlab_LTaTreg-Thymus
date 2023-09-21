@@ -2,18 +2,19 @@
 
 ## Article information
 
-**Title:** Lymphotoxin α limits Foxp3+ regulatory T cell development from Foxp3lo precursors via IL-4 signaling
+**Title:** Lymphotoxin limits Foxp3+ regulatory T cell development from Foxp3lo precursors via IL-4 signaling
 
 **Authors:** 
-Alexia Borelli 1, Jérémy C. Santamaria1 , Cloé Zamit 1, Cécile Apert 2, Jessica Chevalier 1, Philippe Pierre 1, Rafael J. Argüello 1, Joost P.M. van Meerwijk 2, Lionel Spinelli 1 and Magali Irla 1*
-
-1 Aix-Marseille University, CNRS, INSERM, CIML, Centre d'Immunologie de Marseille-Luminy, Turing Centre for Living Systems, Marseille, France
+Alexia Borelli 1, Jérémy C. Santamaria 1, Cloé Zamit 1, Cécile Apert 2,3, Jessica Chevallier 1, Philippe Pierre 1, Rafael J. Argüello 1, Lionel Spinelli 1 and Magali Irla 1*
+ 
+1 Aix-Marseille Univ, CNRS, INSERM, CIML, Centre d'Immunologie de Marseille-Luminy, Turing Centre for Living Systems, Marseille, France
 2 Toulouse Institute for Infectious and Inflammatory Diseases (Infinity), INSERM UMR1291 - CNRS UMR5051 - University Toulouse III, Toulouse, France
-
-*Correspondence: magali.irla@inserm.fr
+3 Current affiliation : Microenvironment & Immunity Unit, Institut Pasteur, Paris, France
+ 
+*Correspondence: Magali.Irla@inserm.fr
 
 **Summary:**
-Foxp3+ regulatory T cells (Treg) develop in the thymus via two distinct developmental pathways involving CD25+Foxp3- (CD25+ TregP) and CD25-Foxp3lo (Foxp3lo TregP) Treg precursors. However, the mechanisms regulating the recently identified Foxp3lo TregP pathway remains unclear. Here, we found that Foxp3lo TregP express higher levels of the cell surface lymphotoxin α1β2 (LTα1β2) than CD25+ TregP. This expression is upregulated during Treg development upon stimulation with TCR/CD28 and IL-2. Interestingly, Lta expression limits the maturational development of CD25+Foxp3+ Treg from Foxp3lo TregP by regulating their proliferation, survival and metabolic profiles. Transgenic reporter mice and transcriptomic analysis revealed that medullary thymic epithelial cells (mTEC) constitute an unexpected source of IL-4. We demonstrate that lymphotoxin β receptor (LTβR)-mediated interactions with mTEC limits the development of mature Treg by regulating IL-4 production in mTEC. Altogether, our findings identify that LTα1β2-LTβR axis fine-tunes the Foxp3lo TregP developmental pathway via IL-4 signaling.
+CD25+Foxp3+ regulatory T cells (Treg) develop in the thymus via two distinct developmental pathways involving CD25+Foxp3- (CD25+ TregP) and CD25-Foxp3lo (Foxp3lo TregP) precursors. However, the mechanisms regulating the recently identified Foxp3lo TregP pathway remain unclear. Here, we found that the cell-surface lymphotoxin α1β2 (LTα1β2) heterocomplex is upregulated during Treg development upon TCR/CD28 and IL-2 stimulation. We found that Lta expression limits the maturational development of CD25+Foxp3+ Treg from Foxp3lo TregP by regulating their proliferation, survival and metabolic profile. Transgenic reporter mice and transcriptomic analyses further revealed that medullary thymic epithelial cells (mTEC) constitute an unexpected source of IL-4. We demonstrate that LTα1β2-lymphotoxin β receptor (LTβR)-mediated interactions with mTEC limit Treg development by down-regulating IL-4 production in mTEC. Altogether, our findings identify the LTα1β2-LTβR axis as the first inhibitory checkpoint of Treg development that fine-tunes the Foxp3lo TregP pathway by limiting IL-4 availability.
 
 **DOI:**
 
