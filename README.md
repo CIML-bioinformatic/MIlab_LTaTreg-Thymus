@@ -1,4 +1,4 @@
-# Lymphotoxin α limits Foxp3+ regulatory T cell development from Foxp3lo precursors via IL-4 signaling
+# Lymphotoxin limits Foxp3+ regulatory T cell development from Foxp3lo precursors via IL-4 signaling
 
 ## Article information
 
