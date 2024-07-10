@@ -1,0 +1,37 @@
+FROM python:3.6
+
+MAINTAINER Lionel Spinelli (lionel.spinelli@univ-amu.fr)
+
+
+
+# ##############################
+# R packages system dependencies
+# ##############################
+
+RUN apt-get update && apt-get install -y optipng \
+                                         pandoc \
+                                         libpng-dev \
+                                         zlib1g-dev \
+                                         libssl-dev \
+                                         libcurl4-openssl-dev \
+                                         libglpk-dev
+
+# ################
+# PYTHON PACKAGES 
+# ################
+
+RUN pip3 install numpy scipy cython numba matplotlib scikit-learn h5py click
+RUN pip3 install velocyto
+
+RUN mkdir /samtools
+WORKDIR /tmp
+COPY samtools-1.15.1.tar.bz2 /tmp
+RUN tar xvf samtools-1.15.1.tar.bz2
+WORKDIR /tmp/samtools-1.15.1
+RUN apt-get update && apt-get install -y libbz2-dev liblzma-dev
+RUN ./configure -without-curses --prefix=/samtools
+RUN make
+RUN make install
+
+
+

@@ -1,0 +1,213 @@
+---
+output:
+  html_document: 
+    theme: cerulean
+    toc: true
+    toc_float: true
+    toc_depth: 4
+---
+
+
+
+
+```{r setKnitrOptions, include=FALSE}
+knitr::opts_chunk$set( results='asis', echo = FALSE, error = TRUE, cache = FALSE, cache.comments = TRUE, fig.dim = c(7,7), autodep = TRUE)
+```
+
+
+
+
+```{r loadParamsAndDependencies, warning=FALSE, message=FALSE}
+
+### Load general Deps
+cat("<BR>WORKING_DIR=", WORKING_DIR)
+source( file.path( WORKING_DIR, "00_generalDeps.R"));
+
+# Import chunks from source files
+read_chunk( path=file.path( WORKING_DIR, "01_prepareData.R"));
+source_python( file.path( WORKING_DIR, "02_executescAANet.py"));
+read_chunk( path=file.path( WORKING_DIR, "03_studyArchetypeUsage.R"));
+read_chunk( path=file.path( WORKING_DIR, "04a_studyArchetypeEnrichment_GLM.R"));
+read_chunk( path=file.path( WORKING_DIR, "04b_studyArchetypeEnrichment_seurat.R"));
+read_chunk( path=file.path( WORKING_DIR, "04c_studyArchetypeEnrichment_scShape.R"));
+read_chunk( path=file.path( WORKING_DIR, "90_finalize.R"));
+```
+
+---
+title: `r paste( SCIENTIFIC_PROJECT_NAME, ANALYSIS_STEP_LITTERAL_DESCRIPTION, sep =" - ")`
+---
+
+
+```{r initFunctions}
+
+### Create output directory
+dir.create( PATH_ANALYSIS_OUTPUT, recursive = TRUE, showWarnings = FALSE);
+
+
+### Record starting time (for report and file names)
+startTime = Sys.time();
+startTimeReport   = format( startTime, "%Y %m %d %H:%M:%S")
+startTimeFileName = format( startTime, "%Y_%m_%d_%H_%M_%S")
+
+
+### Initialize utils
+
+# Create a hash for all parameters
+paramsHash = digest( paramsEnv, algo="murmur32");
+
+# Create a 'safe' unique prefix for output files
+outputFilesPrefix = path_sanitize( gsub("([[:punct:]])|\\s+", 
+                                        "_", 
+                                        paste0( SCIENTIFIC_PROJECT_NAME, "_",
+                                                EXPERIMENT_NAME, "_")),
+                                   replacement = "_");
+
+# Set seed for pseudo random number generator
+set.seed(42);
+
+# Create a hidden empty heatmap to prevent heatmapr interference with plotly functions (bug ?)
+cat('<div style="display: none">');
+# main_heatmap(matrix(0));
+cat('</div>');
+```
+
+
+
+
+## Prepare data for DEG analysis
+
+
+### Run informations {.tabset .tabset-fade}
+
+#### Run
+<center>
+```{r runInfo_run}
+pander( c( 'Date'     = startTimeReport,
+           'Hash'     = paramsHash));
+```
+</center>
+
+#### Parameters
+```{r runInfo_params}
+listParams = as.list( paramsEnv);
+pander(listParams[order(names(listParams))]); # Show params in alphabetical order
+```
+
+#### System
+<center>
+```{r runInfo_sysInfo}
+as.data.frame( Sys.info()) %>% kbl() %>% kable_styling()
+```
+</center>
+
+#### R
+```{r runInfo_r}
+pander( sessionInfo());
+```
+
+<!-- Ending the tabset section -->
+### {.toc-ignore} 
+<br /><br />
+
+
+
+
+### Load data from previous analysis step and prepare it for scAANet
+```{r prepareData}
+<<prepare_data>>
+```
+<br /><br />
+
+
+### Execute scAANet on data
+```{python scAANetAnalysis}
+
+import os
+import pandas as pd
+import numpy as np
+import anndata
+from scAAnet.api import scAAnet
+import statsmodels.formula.api
+# import statsmodels.api
+
+# Get the transcriptomi expression matrix from R session
+counts = pd.DataFrame( r.sc10x_counts_df)
+
+# Define the number of archetype to find
+K = int( r.AUTOENCODER_LAYER_INTERNAL_NODES)
+
+# Define the number of nodes in the initial and final layer of the autoencoder
+N = int( r.AUTOENCODER_LAYER_IN_OUT_NODES)
+
+# Define the path to the file of the archetype analysis results
+usage_file = os.path.join( r.PATH_ANALYSIS_OUTPUT, "archetype_usage_K" + str( K) + "_N" + str( N) + ".csv")
+spectra_file = os.path.join( r.PATH_ANALYSIS_OUTPUT, "archetype_spectra_K" + str( K) + "_N" + str( N) + ".csv")
+recon_file =  os.path.join( r.PATH_ANALYSIS_OUTPUT, "archetype_recon_K" + str( K) + "_N" + str( N) + ".csv")
+genescore_file = os.path.join( r.PATH_ANALYSIS_OUTPUT, "archetype_genescore_K" + str( K) + "_N" + str( N) + ".csv")
+deg_file = os.path.join( r.PATH_ANALYSIS_OUTPUT, "archetype_deg_K" + str( K) + "_N" + str( N) + ".csv")
+
+# If the archetype analysis results files are present, use them
+if( os.path.exists( usage_file) and os.path.exists( usage_file) and os.path.exists( usage_file)):
+  
+  usage = pd.read_csv( usage_file, index_col=0).apply( pd.to_numeric)
+  spectra = pd.read_csv( spectra_file, index_col=0).apply( pd.to_numeric)
+  if( K != len( usage.columns)):
+    print( "ERROR: Loaded usage file does not contain the right number of dimension")
+
+else:
+
+  # Compute the latent space representation
+  preds = scAAnet( counts, hidden_size=(N, K, N), ae_type='nb', epochs=200, batch_size=64, early_stop=100, reduce_lr=10, learning_rate=0.01)
+  
+  # Retrieve the result matrices
+  recon, usage, spectra = preds['recon'], preds['usage'], preds['spectra']
+  
+  # Assign the index names to matrices
+  usage = pd.DataFrame( usage, index=counts.index, columns = np.arange(1,K+1))
+  spectra = pd.DataFrame( np.transpose( spectra), index=counts.columns, columns=np.arange(1,K+1))
+  recon = pd.DataFrame( recon, index=counts.index, columns=counts.columns)
+  
+  # Write result matrix to CSV files
+  usage.to_csv( usage_file)
+  spectra.to_csv( spectra_file)
+  recon.to_csv( recon_file)
+
+# Calculate normalized gene scores, scale them and export result to file
+gene_score = spectra*(np.log(spectra+1e-5).sub(np.mean(np.log(spectra+1e-5), axis=1), axis='index'))
+gene_score = gene_score.sub(gene_score.min(axis=0), axis='columns').div(gene_score.max(axis=0)-gene_score.min(axis=0), axis='columns')
+gene_score.to_csv( genescore_file)
+
+# Run DEG tests to identify program-specific DEGs
+# deg_results = programDEG( counts, usage.to_numpy(), test_use='nb_naive', offset=True)
+# deg_results.to_csv( deg_file)
+
+```
+<br /><br />
+
+### Study archetype usage {.tabset .tabset-fade}
+```{r studyArchetypeUsage, warning=FALSE}
+<<study_archetype_usage>>
+```
+<br /><br />
+
+### Study archetype gene module enrichment (with Seurat method) {.tabset .tabset-fade}
+```{r studyArchetypeEncrichmentSeurat, warning=FALSE}
+<<study_archetype_enrichment_seurat>>
+```
+<br /><br />
+
+### Study archetype gene module enrichment (with scShape method) {.tabset .tabset-fade}
+```{r study_archetypeEnrichmentSCshape, warning=FALSE}
+#<<study_archetype_enrichment_scshape>>
+```
+
+### Study archetype gene module enrichment (with GLM method) {.tabset .tabset-fade}
+```{r studyArchetypeEncrichmentGLM, warning=FALSE}
+<<study_archetype_enrichment_glm>>
+```
+<br /><br />
+
+```{r saveFinalSeuratObject, warning=FALSE}
+<<save_final_seurat_object>>
+```
+
