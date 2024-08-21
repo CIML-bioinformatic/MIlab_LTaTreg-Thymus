@@ -16,7 +16,7 @@ Alexia Borelli 1, Jérémy C. Santamaria 1, Cloé Zamit 1, Cécile Apert 2,3, Je
 **Summary:**
 Regulatory T cells (Treg), critical players of immune tolerance, develop in the thymus via two distinct developmental pathways involving CD25+Foxp3- and CD25-Foxp3lo precursors. However, the mechanisms regulating the recently identified Foxp3lo precursor pathway remain unclear. Here, we found that the membrane-bound lymphotoxin α1β2 (LTα1β2) heterocomplex is upregulated during Treg development upon TCR/CD28 and IL-2 stimulation. We show that Lta expression limits the maturational development of Treg from Foxp3lo precursors by regulating their proliferation, survival and metabolic profile. Transgenic reporter mice and transcriptomic analyses further revealed that medullary thymic epithelial cells (mTEC) constitute an unexpected source of IL-4. We demonstrate that LTα1β2-lymphotoxin β receptor-mediated interactions with mTEC limit Treg development by down-regulating IL-4 expression in mTEC. Collectively, our findings identify the lymphotoxin axis as the first inhibitory checkpoint of thymic Treg development that fine-tunes the Foxp3lo Treg precursor pathway by limiting IL-4 availability.
 
-**DOI:**10.1038/s41467-024-51164-5
+**DOI:** 10.1038/s41467-024-51164-5
 
 ---
 ---
