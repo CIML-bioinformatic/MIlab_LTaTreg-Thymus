@@ -96,23 +96,13 @@ PATH_PROJECT = "/home/spinellil/workspace/LTaTReg"
 
 ### Download the data
 
-The sample needs its own sub-folder containing the initial data used by the analysis. These data can be downloaded from Zenodo and uncompressed. The Zenodo dataset DOI is @TODO : DOI ZENODO. The initial data from the analysis are the pre-processed data located in the following folder:
+The sample needs its own sub-folder containing the initial data used by the analysis. These data can be downloaded from Recherche Data Gouv. The dataset DOI is [https://doi.org/10.57745/ZITN0Z]. The initial data from the analysis are the pre-processed data located in the following folder:
 
 * 01_CellRanger_FeatureBarcoding : contains the result of Cell Ranger count analysis from the mRNA fastq
 
 Scripts of the pre-processing steps are provided for Cell Ranger count analysis and corresponding raw data (fastq files) can be downloaded from GEO (see article).
-
-To download and uncompress the data, use the following code:
-
-**On linux:**
-
-```
-    cd $WORKING_DIR
-    wget @TODO PATH ZENODO -O 220126_VH00228_82_AAAV3TVM5_LTaTReg_EXP1_TregThy_processedData.tar.gz
-    tar zxvf 10x_190712_m_moF220126_VH00228_82_AAAV3TVM5_LTaTReg_EXP1_TregThy_processedDataluMemB_processedData.tar.gz
-```
  
-Once done, you may obtain the following subfolder structure, each of them containing several files.
+Once downloaded, you may obtain the following subfolder structure, each of them containing several files.
 
 ```
     LTaTReg
@@ -127,21 +117,32 @@ Once done, you may obtain the following subfolder structure, each of them contai
 
 ### Install Docker
 
-To install Docker on your system to take advantage of interactive analysis environment with Rstudio, follow the instructions here : https://docs.docker.com/engine/install/
+To install Docker on your system to take advantage of interactive analysis environment with Rstudio, follow the instructions here : [https://docs.docker.com/engine/install/]
 
 ---
 
 
 ### Download the Docker images and load them on your system
 
-Docker image tar files are stored on Zenodo @TODO DOI TO DOCKER TAR. Open a shell command and change dir to the root of the cloned Git repository (WORKING_DIR). Then execute the following commands to download the tarball file, untar it and load the docker images on your system: 
+Docker image tar files are stored on Recherche Data Gouv [https://doi.org/10.57745/ZITN0Z]. Once downloaded you will fond the following structure. 
 
 ```
-    cd $WORKING_DIR
-    wget @TODO PATH ZENODO -O LTaTreg_DockerImages.tar.gz
-    tar zxvf LTaTreg_DockerImages.tar.gz
+    LTaTReg
+    │
+    ├── 220126_VH00228_82_AAAV3TVM5_LTaTReg_EXP1_TregThy_processedData
+    │   │
+    │   └── 02_Container
+    
+```
+
+Open a shell command and change dir to the root of the cloned Git repository (WORKING_DIR). Then execute the following commands to load the docker images on your system: 
+
+```
+    cd 02_Container
     docker load -i milab_ltatreg_r411_seurat4.tar
     docker load -i milab_ltatreg_r42_monocle3.tar
+    docker load -i milab_ltatreg_r411_velocyto.tar
+    
 ```
 
 ---
